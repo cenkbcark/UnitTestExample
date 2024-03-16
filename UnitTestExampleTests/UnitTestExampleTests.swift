@@ -9,28 +9,22 @@ import XCTest
 @testable import UnitTestExample
 
 final class UnitTestExampleTests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    
+    func testFetchSongsList_WhenGivenSuccesfullResponse() {
+        let sut = makeSut()
+        var counter = 0
+        sut.reloadData = { counter += 1}
+        sut.fetchSongs()
+        
+        XCTAssertEqual(sut.songs?.count, 3)
+        XCTAssertEqual(counter, 1)
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    //MARK: - Helpers
+    func makeSut() -> MainViewModel {
+        let networkable = ServiceManager()
+        let serviceManager = MockListServiceable(service: networkable)
+        return MainViewModel(service: serviceManager)
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }
